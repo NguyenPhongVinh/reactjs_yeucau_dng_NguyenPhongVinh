@@ -11,8 +11,8 @@ function App() {
       {/* <DemoButtonComp /> */}
       {/* <DemoMainTitleComp /> */}
       <Header />
-      <HomePage />
-      {/* <Login /> */}
+      {/* <HomePage /> */}
+      <Login />
       <div className="spacing"></div>
       <Footer />
     </div>
