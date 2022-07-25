@@ -7,19 +7,25 @@ function ArticleLatest() {
   return (
     <div className="latest-news section">
       <div className="tcl-container">
-        <MainTitle />
+      <MainTitle>Latest Articles</MainTitle>
 
         <div className="latest-news__list spacing">
           <div className="latest-news__card">
-            <ArticleItem />
+            <ArticleItem infoProp={{
+              authorImage: true
+            }}/>
           </div>
 
           <div className="latest-news__card">
-            <ArticleItem />
+            <ArticleItem infoProp={{
+              authorImage: true
+            }}/>
           </div>
 
           <div className="latest-news__card">
-            <ArticleItem />
+            <ArticleItem infoProp={{
+              authorImage: true
+            }}/>
           </div>
         </div>
       </div>
