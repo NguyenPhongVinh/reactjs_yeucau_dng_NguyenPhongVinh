@@ -50,7 +50,7 @@ function handerData() {
 		const html = `<div class="item clearfix" id="${value.id}">
 										<div class="item__description">${value.description}</div>
 										<div class="right clearfix">
-											<div class="item__value">${parseNumber(value.amount)} đ</div>
+											<div class="item__value">${(value.amount > 0 ? '+' : '') + parseNumber(value.amount)} đ</div>
 											${value.type == 'EXPENSES' ? `<div class="item__percentage">${percent(value.amount, totalIncome)}%</div>` : ''}
 											<div class="item__delete">
 												<button class="item__delete--btn">
