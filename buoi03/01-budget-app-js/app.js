@@ -45,7 +45,7 @@ function handleClickAddBudget() {
   let _vlEleValue = parseInt(eleAddValue.value);
   const _vlEleDes = eleAddDescription.value;
 
-  if (_vlEleValue < 1) return;
+  if (!_vlEleValue || _vlEleValue < 1) return;
   if (_vlEleDes === '') return;
   if (eleAddType.value == 'exp') _vlEleValue *= -1;
   addBudget({
