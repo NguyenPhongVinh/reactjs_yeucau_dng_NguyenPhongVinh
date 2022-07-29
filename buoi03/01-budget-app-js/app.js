@@ -1,81 +1,181 @@
-let listData = [{
-		id: createUUID(),
-		description: 'Chi tieu ngay 26/07',
-		amount: -100000
-	},
-	{
-		id: createUUID(),
-		description: 'Thu nhap thang 06',
-		amount: 3000000
-	},
-	{
-		id: createUUID(),
-		description: 'Thu nhap thang 07',
-		amount: 2000000
-	},
-	{
-		id: createUUID(),
-		description: 'Chi tieu ngay 27/07',
-		amount: -150000
-	},
-];
+// Elements
+const eleBudgetValue = document.querySelector('.budget__value');
+const eleBudgetIncomeValue = document.querySelector('.budget__income--value');
+const eleBudgetExpensesValue = document.querySelector('.budget__expenses--value');
+const eleBudgetExpensesPercentage = document.querySelector('.budget__expenses--percentage');
 
+const eleListIncomes = document.getElementById('list-incomes');
+const eleListExpenses = document.getElementById('list-expenses');
+
+const eleAddType = document.querySelector('.add__type');
+const eleAddDescription = document.querySelector('.add__description');
+const eleAddValue = document.querySelector('.add__value');
+const eleAddBtn = document.querySelector('.add__btn');
+
+let listIncomes = [];
+let listExpenses = [];
+let totalAmountIncome = 0;
+let totalAmountExpense = 0;
+let totalAmount = 0;
+
+getListData();
+
+function getBudget() {
+  return JSON.parse(localStorage.getItem('listBudget'));
+}
+
+function setBudget(data = []) {
+  localStorage.setItem('listBudget', JSON.stringify(data));
+  getListData();
+}
+
+function addBudget(obj) {
+  let budgets = getBudget();
+  if (budgets) {
+    budgets.push(obj);
+  } else {
+    budgets = [obj];
+  }
+  setBudget(budgets);
+}
+
+eleAddBtn.addEventListener('click', handleClickAddBudget);
+
+function handleClickAddBudget() {
+  let _vlEleValue = parseInt(eleAddValue.value);
+  const _vlEleDes = eleAddDescription.value;
+
+  if (_vlEleValue < 1) return;
+  if (_vlEleDes === '') return;
+  if (eleAddType.value == 'exp') _vlEleValue *= -1;
+  addBudget({
+    id: createUUID(),
+    description: _vlEleDes,
+    amount: _vlEleValue
+  });
+  resetInputAdd();
+}
+
+function resetInputAdd() {
+  eleAddValue.value = '';
+  eleAddDescription.value = '';
+}
+
+eleAddType.addEventListener('change', handleChangeType);
+
+function handleChangeType(e) {
+  const type = e.target.value;
+  if (type === 'exp') {
+    eleAddType.classList.add('red-focus');
+    eleAddDescription.classList.add('red-focus');
+    eleAddValue.classList.add('red-focus');
+    eleAddBtn.classList.add('red');
+  } else {
+    eleAddType.classList.remove('red-focus');
+    eleAddDescription.classList.remove('red-focus');
+    eleAddValue.classList.remove('red-focus');
+    eleAddBtn.classList.remove('red');
+  }
+}
+
+function getListData() {
+  const listData = getBudget();
+  listIncomes = listData.filter(dataItem => dataItem.amount > 0);
+  listExpenses = listData.filter(dataItem => dataItem.amount < 0);
+  totalAmountIncome = calTotalAmount(listIncomes);
+  totalAmountExpense = calTotalAmount(listExpenses);
+  totalAmount = calTotalAmount(listData);
+  renderBudgetList();
+}
+
+// render component
+function renderBudgetList() {
+  eleListIncomes.innerHTML = listIncomes.map(item => renderBudgetItem(item, totalAmount)).join('');
+  eleListExpenses.innerHTML = listExpenses.map(item => renderBudgetItem(item, totalAmount)).join('');
+  eleBudgetValue.innerHTML = formatStringAmount(totalAmount);
+  eleBudgetIncomeValue.innerHTML = formatStringAmount(totalAmountIncome);
+  eleBudgetExpensesValue.innerHTML = formatStringAmount(totalAmountExpense);
+  eleBudgetExpensesPercentage.innerHTML = formatPercentAmount(totalAmountExpense, totalAmount);
+}
+
+function renderBudgetItem(data, total) {
+  const {
+    id,
+    amount,
+    description
+  } = data;
+  const percent = amount < 0 ? `<div class="item__percentage">${formatPercentAmount(amount, total)}</div>` : '';
+  return /* html */ `
+  <div class="item clearfix">
+    <div class="item__description">${description}</div>
+    <div class="right clearfix">
+      <div class="item__value">${formatStringAmount(amount)}</div>
+      ${percent}
+      <div class="item__delete">
+        <button class="item__delete--btn" onclick="handleClickBtnRemove('${id}')"><i class="ion-ios-close-outline"></i></button>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+function handleClickBtnRemove(id) {
+  const budgets = getBudget();
+  const data = budgets.filter(dataItem => dataItem.id != id);
+  setBudget(data);
+}
+
+// Helpers
 function createUUID() {
-	let dt = new Date().getTime();
-	let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-		let r = (dt + Math.random() * 16) % 16 | 0;
-		dt = Math.floor(dt / 16);
-		return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-	});
-	return uuid;
+  let dt = new Date().getTime();
+  let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    let r = (dt + Math.random() * 16) % 16 | 0;
+    dt = Math.floor(dt / 16);
+    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+  return uuid;
 }
 
-let htmlIncome = '';
-let htmlExpenses = '';
-let totalIncome = 0;
-let totalExpenses = 0;
+function formatStringAmount(amount) {
+  let sign = '+';
+  let amountFormatted = amount;
 
-function handerData() {
-	listData.forEach(function (value, index) {
-		const type = value.amount < 0 ? 'EXPENSES' : 'INCOME';
-		value.type = type;
-		if (type == 'EXPENSES') {
-			totalExpenses += value.amount;
-		} else {
-			totalIncome += value.amount;
-		}
-	})
+  if (amount < 0) {
+    sign = '-';
+    amountFormatted = -1 * amount;
+  }
 
-	listData.forEach(function (value, index) {
-		const html = `<div class="item clearfix" id="${value.id}">
-										<div class="item__description">${value.description}</div>
-										<div class="right clearfix">
-											<div class="item__value">${(value.amount > 0 ? '+' : '') + parseNumber(value.amount)} đ</div>
-											${value.type == 'EXPENSES' ? `<div class="item__percentage">${percent(value.amount, totalIncome)}%</div>` : ''}
-											<div class="item__delete">
-												<button class="item__delete--btn">
-													<i class="ion-ios-close-outline"></i>
-												</button>
-											</div>
-										</div>
-									</div>`;
+  amountFormatted = new Intl.NumberFormat('vi-VI', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(amountFormatted);
 
-		if (value.type == 'INCOME') {
-			htmlIncome += html;
-		} else {
-			htmlExpenses += html;
-		}
-	})
-
-	document.querySelector('#list-incomes').innerHTML = htmlIncome;
-	document.querySelector('#list-expenses').innerHTML = htmlExpenses;
-}
-handerData();
-
-function parseNumber(num) {
-	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return `${sign} ${amountFormatted}`;
 }
 
-function percent(amount, total) {
-	return amount * -1 / total * 100;
+function calTotalAmount(listData) {
+  let total = 0;
+
+  for (let index = 0; index < listData.length; index++) {
+    const data = listData[index];
+    const amount = data.amount;
+
+    total = total + amount;
+  }
+
+  return total;
+}
+
+function formatPercentAmount(amount, total) {
+  if (!total) {
+    return '0%';
+  }
+
+  let percent = Math.round((amount / total) * 100)
+
+  if (percent < 0) {
+    percent = percent * (-1);
+  }
+
+  return percent + '%';
 }
