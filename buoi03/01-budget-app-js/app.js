@@ -1,16 +1,18 @@
-// Elements
+// Elements top
 const eleBudgetValue = document.querySelector('.budget__value');
 const eleBudgetIncomeValue = document.querySelector('.budget__income--value');
 const eleBudgetExpensesValue = document.querySelector('.budget__expenses--value');
 const eleBudgetExpensesPercentage = document.querySelector('.budget__expenses--percentage');
 
-const eleListIncomes = document.getElementById('list-incomes');
-const eleListExpenses = document.getElementById('list-expenses');
-
+// Elements bottom add
 const eleAddType = document.querySelector('.add__type');
 const eleAddDescription = document.querySelector('.add__description');
 const eleAddValue = document.querySelector('.add__value');
 const eleAddBtn = document.querySelector('.add__btn');
+
+// Elements bottom list content
+const eleListIncomes = document.getElementById('list-incomes');
+const eleListExpenses = document.getElementById('list-expenses');
 
 let listIncomes = [];
 let listExpenses = [];
