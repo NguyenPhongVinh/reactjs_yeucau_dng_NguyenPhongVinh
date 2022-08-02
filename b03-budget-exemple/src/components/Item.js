@@ -15,7 +15,7 @@ function Item({ data, total }) {
       <div className="item__description">{description}</div>
       <div className="right clearfix">
         <div className="item__value">{formatStringAmount(amount)}</div>
-        {total && <div className="item__percentage">{formatPercentAmount(amount, total)}</div>}
+        {amount < 0 && <div className="item__percentage">{formatPercentAmount(amount, total)}</div>}
         <div className="item__delete">
           <button className="item__delete--btn" onClick={() => handleClickBtnRemove(`${id}`)}><i className="ion-ios-close-outline" /></button>
         </div>
