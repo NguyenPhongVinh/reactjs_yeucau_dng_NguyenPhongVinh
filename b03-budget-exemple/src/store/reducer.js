@@ -1,34 +1,35 @@
-import { v4 as uuidv4 } from 'uuid';
+import { ADD_BUDGET, REMOVE_BUDGET } from './action';
+
+function getBudget() {
+  return JSON.parse(localStorage.getItem('listBudget'));
+}
+
+function setBudget(data = []) {
+  localStorage.setItem('listBudget', JSON.stringify(data));
+}
 
 const initState = {
-  listDataIncome: [
-    {
-      id: uuidv4(),
-      description: 'Chi tieu ngay 26/07',
-      amount: -100000
-    },
-    {
-      id: uuidv4(),
-      description: 'Thu nhap thang 06',
-      amount: 3000000
-    },
-    {
-      id: uuidv4(),
-      description: 'Thu nhap thang 07',
-      amount: 2000000
-    },
-    {
-      id: uuidv4(),
-      description: 'Chi tieu ngay 27/07',
-      amount: -150000
-    }
-  ]
+  listDataIncome: getBudget() ?? []
 };
 
 function reducer(state = initState, action) {
-  console.log('state', state);
-  console.log('action', action);
-  return state;
+  let listNew;
+  let stateNew = state;
+  switch (action.type) {
+    case ADD_BUDGET:
+      listNew = [...state.listDataIncome, action.payload];
+      stateNew = { ...state, listDataIncome: listNew };
+      setBudget(listNew);
+      return stateNew;
+
+    case REMOVE_BUDGET:
+      listNew = state.listDataIncome.filter(item => item.id != action.payload);
+      stateNew = { ...state, listDataIncome: listNew };
+      setBudget(listNew);
+      return stateNew;
+    
+    default: return state;
+  }
 }
 
 export default reducer;

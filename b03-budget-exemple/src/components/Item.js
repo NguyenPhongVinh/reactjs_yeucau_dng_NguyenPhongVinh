@@ -1,9 +1,15 @@
 import { formatStringAmount, formatPercentAmount } from '../helpers';
+import { removeBudget } from '../store/action';
+import { useDispatch } from 'react-redux';
+
 function Item({ data, total }) {
   const { id, description, amount } = data;
+  const dispatch = useDispatch();
+
   function handleClickBtnRemove(id) {
-    alert(id);
+    dispatch(removeBudget(id));
   }
+
   return (
     <div className="item clearfix">
       <div className="item__description">{description}</div>

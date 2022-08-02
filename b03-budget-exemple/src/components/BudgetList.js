@@ -2,6 +2,7 @@ import BudgetExpenses from "./BudgetExpenses";
 import BudgetIncomes from "./BudgetIncomes";
 import { calTotalAmount } from '../helpers';
 import { useSelector } from "react-redux";
+
 function BudgetList() {
   const listData = useSelector((state) => state.listDataIncome);
   const listIncomes = listData.filter(dataItem => dataItem.amount > 0);
