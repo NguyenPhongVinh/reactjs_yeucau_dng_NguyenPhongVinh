@@ -1,11 +1,9 @@
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-export default function ArticleItemThumb() {
+export default function ArticleItemThumb({ thumbnail, slugLink, title }) {
   return (
     <div className="article-item__thumbnail">
-      <a href="/">
-        <img src="/assets/images/blog-1.jpg" alt="assets/images/blog-1.jpg" />
-      </a>
+      <Link to={slugLink}><img src={thumbnail} alt={title} /></Link>
     </div>
   )
 }
