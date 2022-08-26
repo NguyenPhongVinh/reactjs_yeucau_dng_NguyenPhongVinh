@@ -7,6 +7,7 @@ export const ACT_FETCH_ARTICLE_POPULAR = 'ACT_FETCH_ARTICLE_POPULAR';
 export const ACT_FETCH_ARTICLE_GENERAL = 'ACT_FETCH_ARTICLE_GENERAL';
 export const ACT_FETCH_ARTICLE_SEARCH = 'ACT_FETCH_ARTICLE_SEARCH';
 export const ACT_FETCH_ARTICLE_DETAIL = 'ACT_FETCH_ARTICLE_DETAIL';
+export const ACT_FETCH_ARTICLE_RELATED = 'ACT_FETCH_ARTICLE_RELATED';
 
 
 // Action
@@ -50,7 +51,14 @@ export function actFetchArticleDetail(post) {
     }
   }
 }
-
+export function actFetchArticleRelated(posts) {
+  return {
+    type: ACT_FETCH_ARTICLE_RELATED,
+    payload: {
+      posts
+    }
+  }
+}
 
 // Action Async
 export function actFetchArticleLatestAsync() {
@@ -95,12 +103,24 @@ export function actFetchArticleGeneralAsync({
   }
 }
 
-export function actFetchArticleDetailAsync({slug}) {
+export function actFetchArticleDetailAsync({ slug }) {
   return async (dispatch) => {
     try {
-      const response = await postService.getList({slug});
+      const response = await postService.getList({ slug });
       const post = response.data.map(mappingPostData);
       dispatch(actFetchArticleDetail(post[0]));
+    } catch (err) {
+      // TODO
+    }
+  }
+}
+
+export function actFetchArticleRelatedAsync({ categories }) {
+  return async (dispatch) => {
+    try {
+      const response = await postService.getArticleLatest({ categories });
+      const posts = response.data.map(mappingPostData);
+      dispatch(actFetchArticleRelated(posts));
     } catch (err) {
       // TODO
     }

@@ -1,5 +1,15 @@
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localeVi from 'dayjs/locale/vi';
+import { DATE_TEMPLATE } from '../../constants';
+
+dayjs.extend(relativeTime);
+dayjs.locale(localeVi);
 
 function PostDetailHead({title, author, viewCount, createdDate}) {
+  
+  const createdDateObj = dayjs(createdDate);
+  const dateFormatted = createdDateObj.format(DATE_TEMPLATE);
   return (
     <div className="post-detail__head">
       <div className="tcl-container">
@@ -9,7 +19,7 @@ function PostDetailHead({title, author, viewCount, createdDate}) {
             By <a href="/"><strong>{author.nickname}</strong></a>
           </li>
           <li className="item date">
-            {createdDate}
+            {dateFormatted}
           </li>
           <li className="item views">
             {viewCount} <i className="icons ion-ios-eye" />

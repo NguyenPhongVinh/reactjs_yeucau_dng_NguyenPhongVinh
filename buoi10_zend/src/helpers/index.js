@@ -14,6 +14,7 @@ export function mappingPostData(post) {
     createdDate: post.date,
     slug: post.slug,
     categoriesId: post.categories,
+    tagsId: post.tags,
     viewCount: post.view_count,
     content: post.content.rendered
   }
@@ -52,6 +53,24 @@ export function handleHashCategoryById(categories) {
       name: categoryItem.name,
       slug: categoryItem.slug,
       lang: categoryItem.lang
+    }
+  })
+
+  return hashObj
+}
+
+
+export function handleHashTagsById(tags) {
+  const hashObj = {}
+
+  tags.forEach(tagItem => {
+    const key = tagItem.id
+
+    hashObj[key] = {
+      id: tagItem.id,
+      name: tagItem.name,
+      slug: tagItem.slug,
+      lang: tagItem.lang
     }
   })
 

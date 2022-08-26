@@ -3,7 +3,7 @@ import PostDetailComments from "./PostDetailComments"
 import PostDetailRichText from "./PostDetailRichText"
 import PostDetailTags from "./PostDetailTags"
 
-function PostDetailContent({ thumbnail, content }) {
+function PostDetailContent({ thumbnail, content, tagsId }) {
   return (
     <div className="post-detail__content">
       <div className="thumbnail">
@@ -12,7 +12,7 @@ function PostDetailContent({ thumbnail, content }) {
       <div className="content-padding">
         <PostDetailRichText content={content} />
 
-        <PostDetailTags />
+        <PostDetailTags tagsId={tagsId} />
 
         <PostDetailComments />
       </div>

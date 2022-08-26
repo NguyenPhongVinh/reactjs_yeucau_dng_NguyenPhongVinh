@@ -1,10 +1,10 @@
 import PostDetailAuthor from "./PostDetailAuthor"
 import PostDetailRelatedPosts from "./PostDetailRelatedPosts"
 
-function PostDetailSidebar() {
+function PostDetailSidebar({author, authorId}) {
   return (
     <div className="post-detail__side">
-      <PostDetailAuthor />
+      <PostDetailAuthor author={author} authorId={authorId} />
       <div className="spacing" />
       <PostDetailRelatedPosts />
     </div>

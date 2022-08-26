@@ -1,9 +1,10 @@
-import { ACT_FETCH_ARTICLE_GENERAL, ACT_FETCH_ARTICLE_LATEST, ACT_FETCH_ARTICLE_POPULAR, ACT_FETCH_ARTICLE_DETAIL } from "./actions";
+import { ACT_FETCH_ARTICLE_GENERAL, ACT_FETCH_ARTICLE_LATEST, ACT_FETCH_ARTICLE_POPULAR, ACT_FETCH_ARTICLE_DETAIL, ACT_FETCH_ARTICLE_RELATED } from "./actions";
 
 const intState = {
   articleLatest: [],
   articlePopular: [],
   articleGeneral: [],
+  articleRelated: [],
   articlePaging: {
     list: [],
     currentPage: 1
@@ -38,6 +39,11 @@ function reducer(postState = intState, action) {
       return {
         ...postState,
         articleDetail: action.payload.post
+      }
+    case ACT_FETCH_ARTICLE_RELATED:
+      return {
+        ...postState,
+        articleRelated: action.payload.posts
       }
     default:
       return postState;

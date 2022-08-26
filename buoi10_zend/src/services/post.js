@@ -9,10 +9,11 @@ const postService = {
       }
     });
   },
-  getArticleLatest() {
+  getArticleLatest({categories}) {
     return postService.getList({
       per_page: 3,
-      page: 1
+      page: 1,
+      categories
     });
   },
   getArticleGeneral({
