@@ -10,14 +10,11 @@ import { useLocation } from 'react-router-dom';
 function SearchPage() {
   const location = useLocation();
   const queryStr = getQueryStr('q', location);
-  console.log('1 ' + queryStr);
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log('2 ' + queryStr);
-
     dispatch(actFetchArticleGeneralAsync({ search: queryStr }));
   }, [dispatch, queryStr]);
-  const total = useSelector(state => state.Post.articlePaging.total);
+  const { list: posts, total } = useSelector(state => state.Post.articlePaging);
 
   return (
     <div className="articles-list section">
@@ -26,30 +23,17 @@ function SearchPage() {
         <MainTitle type="search">{total} kết quả tìm kiếm với từ khóa "{queryStr}"</MainTitle>
 
         <div className="tcl-row tcl-jc-center">
-          <div className="tcl-col-12 tcl-col-md-8">
-            <ArticleItem
-              isStyleCard
-              isShowCategoies
-              isShowAvatar={false}
-              isShowDesc={false}
-            />
-          </div>
-          <div className="tcl-col-12 tcl-col-md-8">
-            <ArticleItem
-              isStyleCard
-              isShowCategoies
-              isShowAvatar={false}
-              isShowDesc={false}
-            />
-          </div>
-          <div className="tcl-col-12 tcl-col-md-8">
-            <ArticleItem
-              isStyleCard
-              isShowCategoies
-              isShowAvatar={false}
-              isShowDesc={false}
-            />
-          </div>
+          {
+            posts.map(item => {
+              return (
+                <div className="tcl-col-12 tcl-col-md-8" key={item.id}>
+                  <ArticleItem
+                    isStyleCard isShowAvatar={false} post={item}
+                  />
+                </div>
+              )
+            })
+          }
         </div>
 
         <div className="text-center">
